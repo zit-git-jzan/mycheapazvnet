@@ -32,3 +32,34 @@ variable "virtual_subnet3-name" {
   description = "Virtual Subnet 3"
   default     = "mycheapvnetclients"
 }
+
+variable "network_nic_name_transfer" {
+  type        = string
+  description = "NIC Name"
+  default     = "zitnictransfer"
+}
+
+variable "network_nic_name_server" {
+  type        = string
+  description = "NIC Name"
+  default     = "zitnicserver"
+}
+
+variable "network_nic_name_clients" {
+  type        = string
+  description = "NIC Name"
+  default     = "zitnicclients"
+}
+
+variable "prefix" {
+  type        = string
+  default     = "debian"
+  description = "Name of "
+
+}
+
+variable "linuxpw" {
+  type        = string
+  default     = "Vpn123+++Vpn123+++"
+  description = "Password"
+}
