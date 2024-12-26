@@ -149,4 +149,5 @@ resource "azurerm_linux_virtual_machine" "mycheapvnetgw" {
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.zitsta.primary_blob_endpoint
   }
+  vtpm_enabled = true
 }
