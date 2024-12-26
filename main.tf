@@ -119,6 +119,7 @@ resource "azurerm_storage_account" "zitsta" {
   resource_group_name      = azurerm_resource_group.zitmycheapvnet.name
   account_tier             = "Standard"
   account_replication_type = "LRS"
+  tags                     = local.tags
 }
 
 # Generate Linux VM
@@ -133,6 +134,7 @@ resource "azurerm_linux_virtual_machine" "mycheapvnetgw" {
   resource_group_name             = azurerm_resource_group.zitmycheapvnet.name
   network_interface_ids           = [azurerm_network_interface.zitnictransfer.id, azurerm_network_interface.zitnicserver.id]
   size                            = "Standard_B1s"
+  tags                            = local.tags
   os_disk {
     name                 = "mycheapvnetdisk"
     caching              = "ReadWrite"
