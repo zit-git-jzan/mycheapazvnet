@@ -51,6 +51,13 @@ variable "network_nic_name_clients" {
   default     = "zitnicclients"
 }
 
+variable "network_nic_name_mytest" {
+  type        = string
+  description = "NIC name"
+  default     = "zitnicmytest"
+
+}
+
 variable "prefix" {
   type        = string
   default     = "debian"
