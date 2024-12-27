@@ -35,6 +35,47 @@ resource "azurerm_subnet" "mycheapvnetserver" {
 
 }
 
+# create route 10.0.0.0/8
+
+resource "azurerm_route_table" "routetoOnPremServer" {
+
+  name                = var.route_to_onPrem
+  location            = azurerm_resource_group.zitmycheapvnet.location
+  resource_group_name = azurerm_resource_group.zitmycheapvnet.name
+  tags                = local.tags
+
+  route {
+    name                   = "route1"
+    address_prefix         = "10.0.0.0/8"
+    next_hop_in_ip_address = "10.255.197.4"
+    next_hop_type          = "VirtualAppliance"
+  }
+
+  route {
+    name                   = "route2"
+    address_prefix         = "192.168.0.0/16"
+    next_hop_in_ip_address = "10.255.197.4"
+    next_hop_type          = "VirtualAppliance"
+  }
+
+  route {
+    name                   = "route3"
+    address_prefix         = "172.16.0.0/12"
+    next_hop_in_ip_address = "10.255.197.4"
+    next_hop_type          = "VirtualAppliance"
+  }
+
+}
+
+
+
+# associate route to subnet
+
+resource "azurerm_subnet_route_table_association" "servervnettoOnPrem" {
+  subnet_id      = azurerm_subnet.mycheapvnetserver.id
+  route_table_id = azurerm_route_table.routetoOnPremServer.id
+}
+
 #create subnet 3 clients
 
 resource "azurerm_subnet" "mycheapvnetclients" {
@@ -44,6 +85,10 @@ resource "azurerm_subnet" "mycheapvnetclients" {
   address_prefixes     = ["10.255.198.0/24"]
 
 }
+
+
+
+
 
 # Create Linux VM
 
@@ -58,7 +103,8 @@ resource "azurerm_network_interface" "zitnictransfer" {
   ip_configuration {
     name                          = "zitnic1config"
     subnet_id                     = azurerm_subnet.mycheapvnettransfer.id
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "10.255.196.4"
   }
 }
 
@@ -71,7 +117,8 @@ resource "azurerm_network_interface" "zitnicserver" {
   ip_configuration {
     name                          = "zitnic2config"
     subnet_id                     = azurerm_subnet.mycheapvnetserver.id
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "10.255.197.4"
   }
 }
 

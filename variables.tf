@@ -70,3 +70,16 @@ variable "linuxpw" {
   default     = "Vpn123+++Vpn123+++"
   description = "Password"
 }
+
+variable "network_security_group_name_internal_traffic" {
+  type        = string
+  default     = "zit_sg_permit_internal_all"
+  description = "network Security Group for internal traffice"
+
+}
+
+variable "route_to_onPrem" {
+  type        = string
+  default     = "routeToonPrem"
+  description = "Route to Onprem"
+}
