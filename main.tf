@@ -90,7 +90,7 @@ resource "azurerm_subnet" "mycheapvnetclients" {
 
 
 
-# Create Linux VM
+# Create Linux VM GW
 
 # Subtask Create Network Interface transfer
 
@@ -169,7 +169,7 @@ resource "azurerm_storage_account" "zitsta" {
   tags                     = local.tags
 }
 
-# Generate Linux VM
+# Generate Linux VM GW
 
 resource "azurerm_linux_virtual_machine" "mycheapvnetgw" {
 
@@ -199,35 +199,79 @@ resource "azurerm_linux_virtual_machine" "mycheapvnetgw" {
   vtpm_enabled = true
 }
 
-# Linux Test machine
+# Create Linux Test Machine (to coment out if not needed)
+#
+#
+#resource "azurerm_network_interface" "zitnicmytest" {
+#
+#  name                = var.network_nic_name_mytest
+#  location            = azurerm_resource_group.zitmycheapvnet.location
+#  resource_group_name = azurerm_resource_group.zitmycheapvnet.name
+#  tags                = local.tags
+#  ip_configuration {
+#    name                          = "zitnicmytestconfig"
+#    subnet_id                     = azurerm_subnet.mycheapvnetserver.id
+#    private_ip_address_allocation = "Dynamic"
+#  }
+#}
+
+#resource "azurerm_linux_virtual_machine" "mytest" {
+#  name                            = "mytest"
+#  admin_username                  = "sysadmin"
+#  admin_password                  = var.linuxpw
+#  disable_password_authentication = false
+#  location                        = azurerm_resource_group.zitmycheapvnet.location
+#  resource_group_name             = azurerm_resource_group.zitmycheapvnet.name
+#  network_interface_ids           = [azurerm_network_interface.zitnicmytest.id]
+#  size                            = "Standard_B1s"
+#  tags                            = local.tags
+#  os_disk {
+#    name                 = "mytestdisk"
+#    caching              = "ReadWrite"
+#    storage_account_type = "Premium_LRS"
+#  }
+#  source_image_reference {
+#    publisher = "debian"
+#    offer     = "debian-12"
+#    sku       = "12-gen2"
+#    version   = "latest"
+#  }
+#  boot_diagnostics {
+#    storage_account_uri = azurerm_storage_account.zitsta.primary_blob_endpoint
+#  }
+#  vtpm_enabled = true
+#}
 
 
-resource "azurerm_network_interface" "zitnicmytest" {
+# Create Windows Server
+#
+#
+resource "azurerm_network_interface" "zitnicazsrvdc02" {
 
   name                = var.network_nic_name_mytest
   location            = azurerm_resource_group.zitmycheapvnet.location
   resource_group_name = azurerm_resource_group.zitmycheapvnet.name
   tags                = local.tags
   ip_configuration {
-    name                          = "zitnicmytestconfig"
+    name                          = "zitnicazsrvdc02"
     subnet_id                     = azurerm_subnet.mycheapvnetserver.id
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "10.255.197.5"
   }
 }
 
 resource "azurerm_linux_virtual_machine" "mytest" {
-
-  name                            = "mytest"
+  name                            = "azsrvdc02"
   admin_username                  = "sysadmin"
   admin_password                  = var.linuxpw
   disable_password_authentication = false
   location                        = azurerm_resource_group.zitmycheapvnet.location
   resource_group_name             = azurerm_resource_group.zitmycheapvnet.name
-  network_interface_ids           = [azurerm_network_interface.zitnicmytest.id]
+  network_interface_ids           = [azurerm_network_interface.zitnicazsrvdc02.id]
   size                            = "Standard_B1s"
   tags                            = local.tags
   os_disk {
-    name                 = "mytestdisk"
+    name                 = "azsrvdc02disk"
     caching              = "ReadWrite"
     storage_account_type = "Premium_LRS"
   }
