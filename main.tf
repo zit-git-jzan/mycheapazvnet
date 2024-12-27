@@ -252,6 +252,7 @@ resource "azurerm_network_interface" "zitnicazsrvdc02" {
   location            = azurerm_resource_group.zitmycheapvnet.location
   resource_group_name = azurerm_resource_group.zitmycheapvnet.name
   tags                = local.tags
+  dns_servers         = ["192.168.128.10", "10.255.197.5"]
   ip_configuration {
     name                          = "zitnicazsrvdc02"
     subnet_id                     = azurerm_subnet.mycheapvnetserver.id
@@ -260,27 +261,29 @@ resource "azurerm_network_interface" "zitnicazsrvdc02" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "mytest" {
-  name                            = "azsrvdc02"
-  admin_username                  = "sysadmin"
-  admin_password                  = var.linuxpw
-  disable_password_authentication = false
-  location                        = azurerm_resource_group.zitmycheapvnet.location
-  resource_group_name             = azurerm_resource_group.zitmycheapvnet.name
-  network_interface_ids           = [azurerm_network_interface.zitnicazsrvdc02.id]
-  size                            = "Standard_B1s"
-  tags                            = local.tags
+resource "azurerm_windows_virtual_machine" "zitazsrvdc02" {
+  name                  = "azsrvdc02"
+  admin_username        = "sysadmin"
+  admin_password        = var.linuxpw
+  location              = azurerm_resource_group.zitmycheapvnet.location
+  resource_group_name   = azurerm_resource_group.zitmycheapvnet.name
+  network_interface_ids = [azurerm_network_interface.zitnicazsrvdc02.id]
+  size                  = "Standard_B2ms"
+  tags                  = local.tags
+
   os_disk {
     name                 = "azsrvdc02disk"
     caching              = "ReadWrite"
     storage_account_type = "Premium_LRS"
   }
+
   source_image_reference {
-    publisher = "debian"
-    offer     = "debian-12"
-    sku       = "12-gen2"
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2022-datacenter-azure-edition"
     version   = "latest"
   }
+
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.zitsta.primary_blob_endpoint
   }
