@@ -243,12 +243,12 @@ resource "azurerm_linux_virtual_machine" "mycheapvnetgw" {
 #}
 
 
-# Create Windows Server
+# Create Windows Server DC
 #
 #
 resource "azurerm_network_interface" "zitnicazsrvdc02" {
 
-  name                = var.network_nic_name_mytest
+  name                = var.network_nic_name_azsrvdc02
   location            = azurerm_resource_group.zitmycheapvnet.location
   resource_group_name = azurerm_resource_group.zitmycheapvnet.name
   tags                = local.tags
@@ -287,5 +287,55 @@ resource "azurerm_windows_virtual_machine" "zitazsrvdc02" {
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.zitsta.primary_blob_endpoint
   }
-  vtpm_enabled = true
+  vtpm_enabled                      = true
+  vm_agent_platform_updates_enabled = true
+}
+
+
+# Create Windows Server APP
+#
+#
+resource "azurerm_network_interface" "zitnicazsrvapp01" {
+
+  name                = var.network_nic_name_azsrvapp01
+  location            = azurerm_resource_group.zitmycheapvnet.location
+  resource_group_name = azurerm_resource_group.zitmycheapvnet.name
+  tags                = local.tags
+  dns_servers         = ["10.255.197.5", "192.168.128.10"]
+  ip_configuration {
+    name                          = "zitnicazsrvapp01"
+    subnet_id                     = azurerm_subnet.mycheapvnetserver.id
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "10.255.197.6"
+  }
+}
+
+resource "azurerm_windows_virtual_machine" "zitazsrvapp01" {
+  name                  = "azsrvapp01"
+  admin_username        = "sysadmin"
+  admin_password        = var.linuxpw
+  location              = azurerm_resource_group.zitmycheapvnet.location
+  resource_group_name   = azurerm_resource_group.zitmycheapvnet.name
+  network_interface_ids = [azurerm_network_interface.zitnicazsrvapp01.id]
+  size                  = "Standard_B2s"
+  tags                  = local.tags
+
+  os_disk {
+    name                 = "azsrvapp01disk"
+    caching              = "ReadWrite"
+    storage_account_type = "Premium_LRS"
+  }
+
+  source_image_reference {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2022-datacenter-azure-edition"
+    version   = "latest"
+  }
+
+  boot_diagnostics {
+    storage_account_uri = azurerm_storage_account.zitsta.primary_blob_endpoint
+  }
+  vtpm_enabled                      = true
+  vm_agent_platform_updates_enabled = true
 }

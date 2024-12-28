@@ -83,3 +83,17 @@ variable "route_to_onPrem" {
   default     = "routeToonPrem"
   description = "Route to Onprem"
 }
+
+variable "network_nic_name_azsrvdc02" {
+  type        = string
+  description = "NIC name"
+  default     = "zitnicazsrvdc02"
+
+}
+
+variable "network_nic_name_azsrvapp01" {
+  type        = string
+  description = "NIC name"
+  default     = "zitnicazsrvapp01"
+
+}
