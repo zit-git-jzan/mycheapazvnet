@@ -98,6 +98,11 @@ variable "network_nic_name_azsrvapp01" {
 
 }
 
+variable "public_ip_name_azsrvtunnel01" {
+  default     = "zitpubipazsrvtunnel01"
+  description = "name of the public ip"
+}
+
 variable "network_nic_name_azsrvtunnel01" {
   type        = string
   description = "NIC name"

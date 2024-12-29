@@ -343,32 +343,70 @@ resource "azurerm_windows_virtual_machine" "zitazsrvapp01" {
 # Create Linux Machine for Omnissa Tunnel
 #
 #
-resource "azurerm_network_interface" "zitnicazsrvtunnel01" {
+# Create public IP
+#resource "azurerm_public_ip" "zitpubipazsrvtunnel01" {
+#  name                = var.public_ip_name_azsrvtunnel01
+#  location            = azurerm_resource_group.zitmycheapvnet.location
+#  resource_group_name = azurerm_resource_group.zitmycheapvnet.name
+#  tags                = local.tags
+#  allocation_method   = "Static"
+#
+#}
 
-  name                = var.network_nic_name_azsrvtunnel01
-  location            = azurerm_resource_group.zitmycheapvnet.location
-  resource_group_name = azurerm_resource_group.zitmycheapvnet.name
-  tags                = local.tags
-  ip_configuration {
-    name                          = "zitnicsrvtunnelconfig"
-    subnet_id                     = azurerm_subnet.mycheapvnetserver.id
-    private_ip_address_allocation = "Static"
-    private_ip_address            = "10.255.197.7"
-  }
-}
 
-#resource "azurerm_linux_virtual_machine" "mytest" {
-#  name                            = "mytest"
+#resource "azurerm_network_interface" "zitnicazsrvtunnel01" {
+#
+#  name                = var.network_nic_name_azsrvtunnel01
+#  location            = azurerm_resource_group.zitmycheapvnet.location
+#  resource_group_name = azurerm_resource_group.zitmycheapvnet.name
+#  tags                = local.tags
+#  ip_configuration {
+#    name                          = "zitnicsrvtunnelconfig"
+#    subnet_id                     = azurerm_subnet.mycheapvnetserver.id
+#    private_ip_address_allocation = "Static"
+#    private_ip_address            = "10.255.197.7"
+#    public_ip_address_id          = azurerm_public_ip.zitpubipazsrvtunnel01.id
+#  }
+#}
+
+#resource "azurerm_network_security_group" "zitsgazsrvtunnel01" {
+#  name                = "zitsgazsrvtunnel01"
+#  location            = azurerm_resource_group.zitmycheapvnet.location
+#  resource_group_name = azurerm_resource_group.zitmycheapvnet.name
+#  tags                = local.tags
+#}
+
+#resource "azurerm_network_security_rule" "zitazrrvtunnel01inbound" {
+#  name                        = "TunnelInbound"
+#  priority                    = 300
+#  direction                   = "Inbound"
+#  access                      = "Allow"
+#  protocol                    = "Tcp"
+#  source_port_range           = "*"
+#  destination_port_range      = "8443"
+#  source_address_prefix       = "*"
+#  destination_address_prefix  = "*"
+#  resource_group_name         = azurerm_resource_group.zitmycheapvnet.name
+#  network_security_group_name = azurerm_network_security_group.zitsgazsrvtunnel01.name
+#}
+
+#resource "azurerm_network_interface_security_group_association" "zitazsrvtunnel01nsg" {
+#  network_interface_id      = azurerm_network_interface.zitnicazsrvtunnel01.id
+#  network_security_group_id = azurerm_network_security_group.zitsgazsrvtunnel01.id
+#}
+
+#resource "azurerm_linux_virtual_machine" "myazsrvtunnel01" {
+#  name                            = "myazsrvtunnel01"
 #  admin_username                  = "sysadmin"
 #  admin_password                  = var.linuxpw
 #  disable_password_authentication = false
 #  location                        = azurerm_resource_group.zitmycheapvnet.location
 #  resource_group_name             = azurerm_resource_group.zitmycheapvnet.name
-#  network_interface_ids           = [azurerm_network_interface.zitnicmytest.id]
+#  network_interface_ids           = [azurerm_network_interface.zitnicazsrvtunnel01.id]
 #  size                            = "Standard_B1s"
 #  tags                            = local.tags
 #  os_disk {
-#    name                 = "mytestdisk"
+#    name                 = "myazsrvtunnel01disk"
 #    caching              = "ReadWrite"
 #    storage_account_type = "Premium_LRS"
 #  }

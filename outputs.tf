@@ -8,3 +8,7 @@ output "vm_password" {
   sensitive = true
 
 }
+
+#output "azsrvtunnel01_public-ip" {
+#  value = azurerm_public_ip.zitpubipazsrvtunnel01.ip_address
+#}
