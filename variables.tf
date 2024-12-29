@@ -97,3 +97,10 @@ variable "network_nic_name_azsrvapp01" {
   default     = "zitnicazsrvapp01"
 
 }
+
+variable "network_nic_name_azsrvtunnel01" {
+  type        = string
+  description = "NIC name"
+  default     = "zitnicazsrvtunnel01"
+
+}

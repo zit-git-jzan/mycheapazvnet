@@ -268,7 +268,7 @@ resource "azurerm_windows_virtual_machine" "zitazsrvdc02" {
   location              = azurerm_resource_group.zitmycheapvnet.location
   resource_group_name   = azurerm_resource_group.zitmycheapvnet.name
   network_interface_ids = [azurerm_network_interface.zitnicazsrvdc02.id]
-  size                  = "Standard_B2ms"
+  size                  = "Standard_B2s"
   tags                  = local.tags
 
   os_disk {
@@ -317,7 +317,7 @@ resource "azurerm_windows_virtual_machine" "zitazsrvapp01" {
   location              = azurerm_resource_group.zitmycheapvnet.location
   resource_group_name   = azurerm_resource_group.zitmycheapvnet.name
   network_interface_ids = [azurerm_network_interface.zitnicazsrvapp01.id]
-  size                  = "Standard_B2s"
+  size                  = "Standard_B2ms"
   tags                  = local.tags
 
   os_disk {
@@ -339,3 +339,47 @@ resource "azurerm_windows_virtual_machine" "zitazsrvapp01" {
   vtpm_enabled                      = true
   vm_agent_platform_updates_enabled = true
 }
+
+# Create Linux Machine for Omnissa Tunnel
+#
+#
+resource "azurerm_network_interface" "zitnicazsrvtunnel01" {
+
+  name                = var.network_nic_name_azsrvtunnel01
+  location            = azurerm_resource_group.zitmycheapvnet.location
+  resource_group_name = azurerm_resource_group.zitmycheapvnet.name
+  tags                = local.tags
+  ip_configuration {
+    name                          = "zitnicsrvtunnelconfig"
+    subnet_id                     = azurerm_subnet.mycheapvnetserver.id
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "10.255.197.7"
+  }
+}
+
+#resource "azurerm_linux_virtual_machine" "mytest" {
+#  name                            = "mytest"
+#  admin_username                  = "sysadmin"
+#  admin_password                  = var.linuxpw
+#  disable_password_authentication = false
+#  location                        = azurerm_resource_group.zitmycheapvnet.location
+#  resource_group_name             = azurerm_resource_group.zitmycheapvnet.name
+#  network_interface_ids           = [azurerm_network_interface.zitnicmytest.id]
+#  size                            = "Standard_B1s"
+#  tags                            = local.tags
+#  os_disk {
+#    name                 = "mytestdisk"
+#    caching              = "ReadWrite"
+#    storage_account_type = "Premium_LRS"
+#  }
+#  source_image_reference {
+#    publisher = "debian"
+#    offer     = "debian-12"
+#    sku       = "12-gen2"
+#    version   = "latest"
+#  }
+#  boot_diagnostics {
+#    storage_account_uri = azurerm_storage_account.zitsta.primary_blob_endpoint
+#  }
+#  vtpm_enabled = true
+#}
