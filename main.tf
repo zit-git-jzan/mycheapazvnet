@@ -287,8 +287,8 @@ resource "azurerm_windows_virtual_machine" "zitazsrvdc02" {
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.zitsta.primary_blob_endpoint
   }
-  vtpm_enabled                      = true
-  vm_agent_platform_updates_enabled = true
+  vtpm_enabled = true
+  #vm_agent_platform_updates_enabled = true
 }
 
 
